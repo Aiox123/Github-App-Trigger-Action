@@ -1,10 +1,13 @@
 name: 外部 API 触发创建 Issue（仅支持 GitHub App 调用）
 
-# 🔥 仅允许外部 API 触发（你的 Python 脚本）
 on:
   repository_dispatch:
     types:
       - create-issue
+
+# 显式声明权限，确保 GitHub App 有写入 Issue 的权限
+permissions:
+  issues: write
 
 jobs:
   create-issue:
@@ -14,10 +17,7 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            // 从外部 API 调用中获取动态参数
             const { title, body } = context.payload.client_payload;
-
-            // 创建 Issue
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
