@@ -1,11 +1,10 @@
-name: 外部 API 触发创建 Issue（仅支持 GitHub App 调用）
+name: 外部 API 触发创建 Issue
 
 on:
   repository_dispatch:
-    types:
-      - create-issue
+    types: [create-issue]
 
-# 显式声明权限，确保 GitHub App 有写入 Issue 的权限
+# 🔥 必须加：给 Action 开 Issue 写入权限
 permissions:
   issues: write
 
@@ -13,11 +12,12 @@ jobs:
   create-issue:
     runs-on: ubuntu-latest
     steps:
-      - name: 使用传入参数创建 Issue
-        uses: actions/github-script@v7
+      - name: 创建 Issue
+        uses: actions/github-script@v8  # 🔥 v8 解决 Node.js 20 警告
         with:
           script: |
             const { title, body } = context.payload.client_payload;
+
             await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
