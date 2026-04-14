@@ -22,9 +22,10 @@ class GitHubAppDomain:
 
         now = int(time.time())
         # 严格遵循 GitHub 要求：exp 最大 600 秒，iat 提前 30 秒避免时钟偏差
+        # 由于系统时间可能与 GitHub 服务器时间存在差异，设置较短的过期时间
         payload = {
             "iat": now - 30,
-            "exp": now + 600,
+            "exp": now + 300,  # 设置为 5 分钟
             "iss": self.app_id
         }
 

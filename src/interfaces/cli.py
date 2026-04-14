@@ -7,6 +7,7 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 from src.application.issue_service import IssueService
 from dotenv import load_dotenv
 import os
+from src.common.logger import get_logger
 
 def main():
     # 加载环境变量
@@ -14,6 +15,7 @@ def main():
     load_dotenv(dotenv_path=project_root / ".env")
 
     repo = os.getenv("REPO")
+    logger = get_logger(__name__)
 
     # =======================
     # ✅ 在这里写 Issue 内容
@@ -30,10 +32,10 @@ def main():
     status_code = service.create_issue(repo, issue_title, issue_body)
 
     if status_code == 204:
-        print("✅ 成功触发 Issue 创建！")
-        print(f"📝 Issue 标题：{issue_title}")
+        logger.info("成功触发 Issue 创建！")
+        logger.info(f"Issue 标题：{issue_title}")
     else:
-        print(f"❌ 触发失败，状态码：{status_code}")
+        logger.error(f"触发失败，状态码：{status_code}")
 
 if __name__ == "__main__":
     main()
